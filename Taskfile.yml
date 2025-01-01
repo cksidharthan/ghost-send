@@ -1,0 +1,79 @@
+version: '3'
+
+tasks:
+  run:
+    desc: Run the application
+    cmds:
+      - go run main.go
+
+  deps:
+    desc: Install dependencies
+    cmds:
+      - go mod download
+      - go mod verify
+      - go mod tidy
+      - go mod vendor
+
+  dev-setup:
+    dir: backend
+    desc: Setup the backend project
+    cmds:
+      - go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+      - brew install sqlc
+      - task: deps
+
+  fmt:
+    desc: Format the backend code
+    cmds:
+      - go fmt ./...
+
+  lint:
+    desc: Lint the backend code
+    cmds:
+      - golangci-lint run ./...
+      - go vet ./...
+
+  test:
+    desc: Run all tests
+    cmds:
+      - go test -v -cover ./...
+
+  up:
+    desc: Start the backend server
+    cmds:
+      - go run main.go
+
+  air:
+    desc: Start the backend server with air for hot reload
+    cmds:
+      - air
+
+  sqlc:
+    desc: Generate the SQLC code
+    cmds:
+      - sqlc generate
+
+  build-image:
+    desc: Build the Docker image
+    cmds:
+      - docker build -t secret .
+
+  run-image:
+    desc: Run the Docker image
+    cmds:
+      - docker run -p 7780:7780 secret
+
+  deploy:
+    desc: Deploy the application
+    cmds:
+      - docker compose -f deploy/docker-compose.yaml up -d --build
+
+  deploy-postgres:
+    desc: Deploy the postgres database
+    cmds:
+      - docker compose -f deploy/docker-compose.yaml up -d postgres-secret
+
+  down:
+    desc: Down the application
+    cmds:
+      - docker compose -f deploy/docker-compose.yaml down
