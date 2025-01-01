@@ -1,75 +1,56 @@
 package http
 
 import (
-	"bytes"
-	"fmt"
 	"net/http"
-	"strconv"
 	"time"
 
 	db "github.com/cksidharthan/share-secret/db/sqlc"
 	"github.com/gin-gonic/gin"
 )
 
+type SecretRequest struct {
+	SecretText string `json:"secret_text"`
+	Password   string `json:"password"`
+	Expiration string `json:"expiration"`
+	Views      int    `json:"views"`
+}
+
 func postSecret(secretsHandler SecretHandler) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		err := c.Request.ParseForm()
-		if err != nil {
-			c.HTML(http.StatusBadRequest, "error.html", err.Error())
+		var request SecretRequest
+		if err := c.ShouldBindJSON(&request); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 
-		// Get form values
-		secretText := c.PostForm("secret")
-		password := c.PostForm("password")
-		expiration := c.PostForm("expiration")
-		viewsStr := c.PostForm("views")
-
 		// Validate inputs
-		if secretText == "" {
-			c.HTML(http.StatusBadRequest, "error.html", "Secret text is required")
+		if request.SecretText == "" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Secret text is required"})
 			return
 		}
 
 		// Convert views to integer
-		maxViews, err := strconv.Atoi(viewsStr)
-		if err != nil || maxViews < 1 {
-			c.HTML(http.StatusBadRequest, "error.html", "Invalid views value - must be a positive number")
+		if request.Views < 1 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid views value - must be a positive number"})
 			return
 		}
 
 		// Convert expiration string to duration
-		expirationDuration := getExpirationDuration(expiration)
+		expirationDuration := getExpirationDuration(request.Expiration)
 
 		result, err := secretsHandler.SecretsSvc.CreateSecret(c.Request.Context(), db.CreateSecretParams{
-			SecretText:     secretText,
-			Password:       password,
+			SecretText:     request.SecretText,
+			Password:       request.Password,
 			ExpiresAt:      time.Now().Add(expirationDuration),
-			RemainingTries: int32(maxViews),
+			RemainingTries: int32(request.Views),
 		})
 		if err != nil {
-			c.HTML(http.StatusInternalServerError, "error.html", err.Error())
-			return
-		}
-
-		// If HTMX request, return partial template
-		if c.GetHeader("HX-Request") == "true" {
-			html, err := secretsHandler.Templates.ReadFile("templates/secret-result.html")
-			if err != nil {
-				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to read secret-result.html file"})
-				return
-			}
-
-			fullURL := fmt.Sprintf("%s%s", "https://secret.cksidharthan.site/secret/", result)
-
-			html = bytes.Replace(html, []byte("{{.}}"), []byte(fullURL), 2)
-
-			c.DataFromReader(http.StatusOK, int64(len(html)), "text/html", bytes.NewReader(html), nil)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 
 		// Otherwise return full page
-		c.HTML(http.StatusOK, "index.html", result)
+		c.JSON(http.StatusOK, gin.H{"message": "Secret created successfully", "secret_id": result})
 	}
 }
 

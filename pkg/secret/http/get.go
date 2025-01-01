@@ -1,14 +1,16 @@
 package http
 
 import (
-	"bytes"
-	"io"
 	"net/http"
 
 	db "github.com/cksidharthan/share-secret/db/sqlc"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
+
+type SecretResponse struct {
+	SecretText string `json:"secret_text"`
+}
 
 func getSecret(secretsHandler SecretHandler) gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -17,23 +19,7 @@ func getSecret(secretsHandler SecretHandler) gin.HandlerFunc {
 
 		// If no password provided, render the password input form
 		if password == "" {
-			html, err := secretsHandler.Templates.Open("secret-view.html")
-			if err != nil {
-				c.HTML(http.StatusInternalServerError, "error.html", err.Error())
-				return
-			}
-			defer html.Close()
-
-			buf := new(bytes.Buffer)
-			_, err = io.Copy(buf, html)
-			if err != nil {
-				c.HTML(http.StatusInternalServerError, "error.html", err.Error())
-				return
-			}
-
-			c.HTML(http.StatusOK, buf.String(), gin.H{
-				"ID": secretID,
-			})
+			c.JSON(http.StatusOK, gin.H{"message": "Please enter a password"})
 			return
 		}
 
@@ -42,17 +28,11 @@ func getSecret(secretsHandler SecretHandler) gin.HandlerFunc {
 			Password: password,
 		})
 		if err != nil {
-			c.HTML(http.StatusOK, "error.html", err.Error())
-			return
-		}
-
-		// If HTMX request, return partial template
-		if c.GetHeader("HX-Request") == "true" {
-			c.HTML(http.StatusOK, "secret-result.html", result)
+			c.JSON(http.StatusOK, gin.H{"error": err.Error()})
 			return
 		}
 
 		// Otherwise return full page
-		c.HTML(http.StatusOK, "index.html", result)
+		c.JSON(http.StatusOK, SecretResponse{SecretText: result.SecretText})
 	}
 }
