@@ -2,7 +2,9 @@ package router
 
 import (
 	"context"
+	"embed"
 	"fmt"
+	"io/fs"
 	"net/http"
 	"sync"
 	"time"
@@ -26,7 +28,7 @@ type Router struct {
 }
 
 // New - creates a new router instance and serves it to the application - using uber fx.
-func New(lc fx.Lifecycle, envCfg *config.Config, zapLog *zap.SugaredLogger) Router {
+func New(lc fx.Lifecycle, frontend embed.FS, envCfg *config.Config, zapLog *zap.SugaredLogger) Router {
 	// these calls mutate a global state
 	// using sync.Once here prevents data races prevents data races
 	bootstrapOnly.Do(func() {
@@ -40,6 +42,23 @@ func New(lc fx.Lifecycle, envCfg *config.Config, zapLog *zap.SugaredLogger) Rout
 	engine.Use(gin.Recovery())
 	engine.Use(gin.Logger())
 	engine.RedirectTrailingSlash = false
+
+	// First set up your API routes
+	apiGroup := engine.Group("/api")
+	// Your API routes will go here
+
+	// Then serve static files for all other routes
+	engine.NoRoute(func(c *gin.Context) {
+		dist, err := fs.Sub(frontend, "frontend/dist")
+		if err != nil {
+			zapLog.Error("dist file server", zap.Error(err))
+			c.Status(http.StatusNotFound)
+
+			return
+		}
+
+		c.FileFromFS(c.Request.URL.Path, http.FS(dist))
+	})
 
 	// Configure CORS
 	engine.Use(cors.New(cors.Config{
@@ -83,7 +102,7 @@ func New(lc fx.Lifecycle, envCfg *config.Config, zapLog *zap.SugaredLogger) Rout
 
 	return Router{
 		Engine:    engine,
-		BaseRoute: engine.Group(""),
+		BaseRoute: apiGroup,
 		Server:    server,
 	}
 }
