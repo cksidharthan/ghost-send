@@ -77,16 +77,16 @@ tasks:
     dir: deploy
     desc: Deploy the application
     cmds:
-      - docker compose -f deploy/docker-compose.yaml up -d --build
+      - docker compose -f docker-compose.yaml up -d --build
 
   deploy-postgres:
     dir: deploy
     desc: Deploy the postgres database
     cmds:
-      - docker compose -f deploy/docker-compose.yaml up -d postgres-secret
+      - docker compose -f docker-compose.yaml up -d postgres-secret
 
   down:
     dir: deploy
     desc: Down the application
     cmds:
-      - docker compose -f deploy/docker-compose.yaml down
+      - docker compose -f docker-compose.yaml down

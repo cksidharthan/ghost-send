@@ -1,16 +1,12 @@
 <template>
     <main class="h-full">
-        <!-- Hero Section with Form -->
         <div class="relative min-h-[calc(100vh-theme(spacing.16)-theme(spacing.32))]">
             <!-- Dark gradient background -->
             <div class="absolute inset-0 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900"></div>
 
             <!-- Vector strokes and patterns -->
             <div class="absolute inset-0">
-                <!-- Grid pattern -->
-                <div
-                    class="absolute inset-0 [background:radial-gradient(#2a3366_1px,transparent_1px)] [background-size:32px_32px] opacity-30">
-                </div>
+                <div class="absolute inset-0 [background:radial-gradient(#2a3366_1px,transparent_1px)] [background-size:32px_32px] opacity-30"></div>
 
                 <!-- Animated vector lines -->
                 <div class="absolute inset-0">
@@ -50,52 +46,48 @@
             <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/80 to-gray-900/40"></div>
 
             <!-- Content Container -->
-            <div class="mx-auto max-w-7xl px-6 py-12 sm:py-16 lg:py-20 relative z-10">
+            <div class="mx-auto max-w-7xl px-6 py-8 sm:py-12 lg:py-16 relative z-10">
                 <div class="flex flex-col lg:flex-row lg:items-center lg:gap-x-16">
                     <!-- Left Side - Hero Content -->
-                    <div class="max-w-2xl lg:max-w-xl lg:pt-8 mb-12 lg:mb-0 animate-fade-in">
+                    <div class="max-w-2xl lg:max-w-xl lg:pt-8 mb-8 lg:mb-0 animate-fade-in">
                         <h1 class="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
                             Share secrets
-                            <span
-                                class="block mt-2 bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent">
+                            <span class="block mt-2 bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent">
                                 securely with confidence
                             </span>
                         </h1>
-                        <p class="mt-6 text-lg sm:text-xl leading-8 text-gray-300 animate-fade-in-delay">
-                            Share sensitive information securely with end-to-end encryption.
-                            Set expiration times and view limits to ensure your data stays protected.
+                        <p class="mt-4 text-lg leading-8 text-gray-300 animate-fade-in-delay">
+                            Share passwords, API keys, and sensitive information securely and temporarily. 
+                            Our platform ensures your secrets are protected and automatically destroyed 
+                            after access or expiration - no traces left behind.
                         </p>
 
                         <!-- Feature List -->
-                        <div class="mt-10 space-y-6">
+                        <div class="mt-8 space-y-4">
                             <div class="flex items-center gap-x-3 animate-fade-in-up delay-200">
-                                <div
-                                    class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg bg-indigo-500/10">
-                                    <Icon name="heroicons:shield-check" class="w-5 h-5 text-indigo-500" />
-                                </div>
-                                <p class="text-base text-gray-300">End-to-end encryption for maximum security</p>
-                            </div>
-                            <div class="flex items-center gap-x-3 animate-fade-in-up delay-300">
-                                <div
-                                    class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg bg-indigo-500/10">
+                                <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg bg-indigo-500/10">
                                     <Icon name="heroicons:clock" class="w-5 h-5 text-indigo-500" />
                                 </div>
                                 <p class="text-base text-gray-300">Automatic expiration after specified time</p>
                             </div>
-                            <div class="flex items-center gap-x-3 animate-fade-in-up delay-400">
-                                <div
-                                    class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg bg-indigo-500/10">
+                            <div class="flex items-center gap-x-3 animate-fade-in-up delay-300">
+                                <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg bg-indigo-500/10">
                                     <Icon name="heroicons:eye" class="w-5 h-5 text-indigo-500" />
                                 </div>
                                 <p class="text-base text-gray-300">Limited views for enhanced privacy</p>
+                            </div>
+                            <div class="flex items-center gap-x-3 animate-fade-in-up delay-500">
+                                <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg bg-indigo-500/10">
+                                    <Icon name="heroicons:trash" class="w-5 h-5 text-indigo-500" />
+                                </div>
+                                <p class="text-base text-gray-300">Automatic destruction after access or expiration</p>
                             </div>
                         </div>
                     </div>
 
                     <!-- Right Side - Form -->
                     <div class="lg:flex-1 lg:min-w-[500px]">
-                        <div
-                            class="bg-gray-800/80 backdrop-blur-sm p-6 sm:p-8 rounded-xl shadow-2xl transition-all duration-300 hover:shadow-indigo-500/10 border border-gray-700/50 animate-fade-in-up delay-200">
+                        <div class="bg-gray-800/80 backdrop-blur-sm p-6 rounded-xl shadow-2xl transition-all duration-300 hover:shadow-indigo-500/10 border border-gray-700/50 animate-fade-in-up delay-200">
                             <div>
                                 <h2 class="text-center text-2xl font-extrabold text-white">
                                     <span class="flex items-center justify-center gap-2">
@@ -103,12 +95,10 @@
                                         Share a Secret
                                     </span>
                                 </h2>
-                                <p class="mt-2 text-center text-sm text-gray-400">
-                                    Secure, encrypted, and temporary
-                                </p>
+                                <p class="mt-2 text-center text-sm text-gray-400">Secure and temporary</p>
                             </div>
 
-                            <form @submit.prevent="submitSecret" class="mt-8 space-y-6">
+                            <form @submit.prevent="submitSecret" class="mt-6 space-y-4">
                                 <!-- Secret Input -->
                                 <div class="space-y-2">
                                     <label for="secret" class="block text-sm font-medium text-gray-300">
@@ -120,7 +110,7 @@
                                     <textarea v-model="formData.secret_text" id="secret" required
                                         class="appearance-none relative block w-full px-3 py-2 border border-gray-600 placeholder-gray-500 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 text-sm bg-gray-700/50 backdrop-blur-sm transition-all duration-300"
                                         placeholder="Enter the secret text or password you want to share"
-                                        rows="3"></textarea>
+                                        rows="10"></textarea>
                                 </div>
 
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -160,14 +150,14 @@
                                     <label for="password" class="block text-sm font-medium text-gray-300">
                                         <span class="flex items-center gap-2">
                                             <Icon name="heroicons:key" class="w-5 h-5" />
-                                            Access Password (Optional)
+                                            Access Password
                                         </span>
                                     </label>
                                     <div class="relative">
                                         <input v-model="formData.password" :type="showPassword ? 'text' : 'password'"
                                             id="password"
                                             class="block w-full px-3 py-2 border border-gray-600 rounded-lg text-white bg-gray-700/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 pr-10 transition-all duration-300"
-                                            placeholder="Set a password to protect this secret" />
+                                            placeholder="Set a password to protect this secret" required/>
                                         <button type="button" @click="showPassword = !showPassword"
                                             class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-white transition-colors duration-200">
                                             <Icon :name="showPassword ? 'heroicons:eye-slash' : 'heroicons:eye'"
@@ -178,10 +168,9 @@
 
                                 <!-- Submit Button -->
                                 <button type="submit" :disabled="loading"
-                                    class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300">
+                                    class="group relative w-full flex justify-center py-2.5 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300">
                                     <span class="absolute left-0 inset-y-0 flex items-center pl-3">
-                                        <Icon name="heroicons:shield-check"
-                                            class="w-5 h-5 text-indigo-500 group-hover:text-indigo-400 transition-colors duration-300" />
+                                        <Icon name="heroicons:shield-check" class="w-5 h-5 text-indigo-500 group-hover:text-indigo-400" />
                                     </span>
                                     {{ loading ? 'Creating...' : 'Create Secure Link' }}
                                 </button>
@@ -204,6 +193,41 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- Add a "How it works" section below the form -->
+        <div class="relative z-10 px-4 sm:px-6 lg:px-8">
+            <h2 class="text-2xl font-bold text-white text-center mb-12">How It Works</h2>
+            <div class="grid md:grid-cols-3 gap-8 lg:gap-12">
+                <div class="bg-gray-800/60 backdrop-blur-sm p-8 rounded-xl border border-gray-700/50 hover:border-indigo-500/30 transition-colors duration-300">
+                    <div class="flex items-center justify-center w-14 h-14 rounded-full bg-indigo-500/20 mb-6">
+                        <Icon name="heroicons:pencil-square" class="w-7 h-7 text-indigo-400" />
+                    </div>
+                    <h3 class="text-lg font-semibold text-white mb-3">1. Create</h3>
+                    <p class="text-gray-400">Enter your secret, set an expiration time and view limit, and protect it with a password.</p>
+                </div>
+                <div class="bg-gray-800/60 backdrop-blur-sm p-8 rounded-xl border border-gray-700/50 hover:border-indigo-500/30 transition-colors duration-300">
+                    <div class="flex items-center justify-center w-14 h-14 rounded-full bg-indigo-500/20 mb-6">
+                        <Icon name="heroicons:share" class="w-7 h-7 text-indigo-400" />
+                    </div>
+                    <h3 class="text-lg font-semibold text-white mb-3">2. Share</h3>
+                    <p class="text-gray-400">Share the generated secure link and password with your intended recipient.</p>
+                </div>
+                <div class="bg-gray-800/60 backdrop-blur-sm p-8 rounded-xl border border-gray-700/50 hover:border-indigo-500/30 transition-colors duration-300">
+                    <div class="flex items-center justify-center w-14 h-14 rounded-full bg-indigo-500/20 mb-6">
+                        <Icon name="heroicons:shield-check" class="w-7 h-7 text-indigo-400" />
+                    </div>
+                    <h3 class="text-lg font-semibold text-white mb-3">3. Secure Access</h3>
+                    <p class="text-gray-400">Recipients access the secret with the password. Once viewed or expired, it's permanently deleted.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="my-12 text-center text-sm text-gray-400 relative z-10">
+            <p class="flex items-center justify-center gap-2">
+                <Icon name="heroicons:shield-check" class="w-5 h-5 text-indigo-500" />
+                Your secrets are encrypted and never stored in plain text
+            </p>
         </div>
     </main>
 </template>
@@ -231,7 +255,7 @@ const accessUrl = computed(() => {
 const submitSecret = async () => {
     loading.value = true
     try {
-        const response = await fetch('http://localhost:8080/secrets', {
+        const response = await fetch(config.public.ghostSendApiUrl + '/secrets', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -253,15 +277,15 @@ const copyToClipboard = async (text) => {
     try {
         await navigator.clipboard.writeText(text)
         toast.add({
-            title: 'Copied to clipboard',
-            description: text,
+            title: 'Success',
+            description: 'Link copied to clipboard',
             timeout: 2000
         })
     } catch (error) {
         console.error('Failed to copy text:', error)
         toast.add({
             title: 'Error',
-            description: 'Failed to copy text to clipboard',
+            description: 'Failed to copy link to clipboard',
             timeout: 2000
         })
     }

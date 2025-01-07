@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	db "github.com/cksidharthan/share-secret/db/sqlc"
+	db "github.com/cksidharthan/ghost-send/db/sqlc"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 )

@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	"github.com/cksidharthan/share-secret/pkg/config"
+	"github.com/cksidharthan/ghost-send/pkg/config"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"

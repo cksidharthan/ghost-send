@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/cksidharthan/share-secret/cmd"
+	"github.com/cksidharthan/ghost-send/cmd"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	_ "github.com/lib/pq"
 )

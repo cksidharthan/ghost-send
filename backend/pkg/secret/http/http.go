@@ -1,7 +1,7 @@
 package http
 
 import (
-	"github.com/cksidharthan/share-secret/pkg/secret/svc"
+	"github.com/cksidharthan/ghost-send/pkg/secret/svc"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/fx"
 )

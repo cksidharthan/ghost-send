@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 
-	db "github.com/cksidharthan/share-secret/db/sqlc"
+	db "github.com/cksidharthan/ghost-send/db/sqlc"
 	"github.com/gin-gonic/gin"
 )
 

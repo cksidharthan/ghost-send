@@ -14,9 +14,8 @@ export default defineNuxtConfig({
     fallback: 'light'
   },
   runtimeConfig: {
-    yourOrigin: "localhost",
     public: {
-      hurdleBackendURL: process.env.HURDLE_API_URL,
+      ghostSendApiUrl: "",
     },
   },
 })

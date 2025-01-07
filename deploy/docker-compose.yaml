@@ -1,52 +1,52 @@
 services:
-  postgres-secret:
+  postgres-ghost:
     image: postgres:17.0-alpine3.20
     networks:
-      - secret-network
+      - ghost-network
     restart: unless-stopped
-    hostname: postgres-secret
+    hostname: postgres-ghost
     ports:
       - 5433:5432
     healthcheck:
-      test: ["CMD", "pg_isready", "-d", "secret", "-U", "postgres"]
+      test: ["CMD", "pg_isready", "-d", "ghostsend", "-U", "postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
-    environment:
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=secret
+    env_file:
+      - ../.env
 
-  app:
-    build:
-      context: ../
-      dockerfile: deploy/Dockerfile
-      args:
-        - PORT=7780
+  frontend:
+    image: cksidharthan/ghostsend-frontend:latest
+    platform: linux/amd64
     ports:
-      - "7780:7780"
+      - "6666:3000"
+    env_file:
+      - ../.env
     networks:
-      - secret-network
-    environment:
-      - PORT=7780
-      - POSTGRES_HOST=postgres-secret
-      - POSTGRES_PORT=5432
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=secret
-      - POSTGRES_DRIVER=postgres
-      - POSTGRES_SSL_MODE=disable
-      - MIGRATION_PATH=/app/db/migrations
+      - ghost-network
+    depends_on:
+      - backend
+      - postgres-ghost
+
+  backend:
+    image: cksidharthan/ghostsend-backend:latest
+    platform: linux/amd64
+    ports:
+      - "8080:8080"
+    networks:
+      - ghost-network
+    env_file:
+      - ../.env
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:7780/healthz"]
+      test: ["CMD", "curl", "-f", "http://localhost:8080/healthz"]
       interval: 10s
       timeout: 5s
       retries: 5
     restart: unless-stopped
     depends_on:
-      postgres-secret:
+      postgres-ghost:
         condition: service_healthy
 
 networks:
-  secret-network:
+  ghost-network:
     driver: bridge

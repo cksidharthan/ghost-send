@@ -1,0 +1,68 @@
+services:
+  postgres-ghost:
+    image: postgres:17.0-alpine3.20
+    networks:
+      - ghost-network
+    restart: unless-stopped
+    hostname: postgres-ghost
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: ["CMD", "pg_isready", "-d", "ghostsend", "-U", "postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=ghostsend
+
+  frontend:
+    build:
+      context: ../
+      dockerfile: ./deploy/Dockerfile-FE
+      args:
+        - PORT=3000
+    ports:
+      - "3000:3000"
+    environment:
+      - NUXT_PUBLIC_GHOST_SEND_API_URL=${GHOST_SEND_API_URL}
+    networks:
+      - ghost-network
+    depends_on:
+      - backend
+      - postgres-ghost
+
+  backend:
+    build:
+      context: ../
+      dockerfile: deploy/Dockerfile-BE
+      args:
+        - PORT=7780
+    ports:
+      - "7780:7780"
+    networks:
+      - ghost-network
+    environment:
+      - PORT=7780
+      - POSTGRES_HOST=postgres-ghost
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=ghostsend
+      - POSTGRES_DRIVER=postgres
+      - POSTGRES_SSL_MODE=disable
+      - MIGRATION_PATH=/app/db/migrations
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7780/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    depends_on:
+      postgres-ghost:
+        condition: service_healthy
+
+networks:
+  ghost-network:
+    driver: bridge

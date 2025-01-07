@@ -5,8 +5,8 @@ import (
 	"database/sql"
 	"fmt"
 
-	db "github.com/cksidharthan/share-secret/db/sqlc"
-	"github.com/cksidharthan/share-secret/pkg/config"
+	db "github.com/cksidharthan/ghost-send/db/sqlc"
+	"github.com/cksidharthan/ghost-send/pkg/config"
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"

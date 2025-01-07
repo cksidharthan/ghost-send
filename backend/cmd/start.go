@@ -1,13 +1,13 @@
 package cmd
 
 import (
-	"github.com/cksidharthan/share-secret/pkg/config"
-	"github.com/cksidharthan/share-secret/pkg/daemon"
-	"github.com/cksidharthan/share-secret/pkg/logger"
-	"github.com/cksidharthan/share-secret/pkg/postgres"
-	"github.com/cksidharthan/share-secret/pkg/router"
-	secretHttp "github.com/cksidharthan/share-secret/pkg/secret/http"
-	secretSvc "github.com/cksidharthan/share-secret/pkg/secret/svc"
+	"github.com/cksidharthan/ghost-send/pkg/config"
+	"github.com/cksidharthan/ghost-send/pkg/daemon"
+	"github.com/cksidharthan/ghost-send/pkg/logger"
+	"github.com/cksidharthan/ghost-send/pkg/postgres"
+	"github.com/cksidharthan/ghost-send/pkg/router"
+	secretHttp "github.com/cksidharthan/ghost-send/pkg/secret/http"
+	secretSvc "github.com/cksidharthan/ghost-send/pkg/secret/svc"
 	"go.uber.org/fx"
 )
 

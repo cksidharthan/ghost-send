@@ -51,6 +51,8 @@
                 <h2 class="text-2xl font-bold text-white text-center mb-4">Page Not Found</h2>
                 <p class="text-gray-400 text-center mb-8">
                     The page you're looking for seems to have vanished into the digital void.
+
+                    Well, that's a bit embarrassing but not as embarrassing as you trying to access a secret that doesn't exist. 😜
                 </p>
 
                 <NuxtLink 

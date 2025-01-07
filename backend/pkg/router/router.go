@@ -8,7 +8,7 @@ import (
 	"time"
 
 	validator "github.com/asaskevich/govalidator"
-	"github.com/cksidharthan/share-secret/pkg/config"
+	"github.com/cksidharthan/ghost-send/pkg/config"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/fx"

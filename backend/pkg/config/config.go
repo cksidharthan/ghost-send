@@ -14,7 +14,7 @@ type Config struct {
 	PostgresPort     int    `env:"POSTGRES_PORT" envDefault:"5433"`
 	PostgresUser     string `env:"POSTGRES_USER" envDefault:"postgres"`
 	PostgresPassword string `env:"POSTGRES_PASSWORD" envDefault:"postgres"`
-	PostgresDB       string `env:"POSTGRES_DB" envDefault:"secret"`
+	PostgresDB       string `env:"POSTGRES_DB" envDefault:"ghostsend"`
 	PostgresSSLMode  string `env:"POSTGRES_SSL_MODE" envDefault:"disable"`
 	MigrationsPath   string `env:"MIGRATION_PATH" envDefault:"db/migrations"`
 

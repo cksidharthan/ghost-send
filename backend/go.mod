@@ -1,4 +1,4 @@
-module github.com/cksidharthan/share-secret
+module github.com/cksidharthan/ghost-send
 
 go 1.23.4
 

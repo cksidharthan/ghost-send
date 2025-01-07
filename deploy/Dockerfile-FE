@@ -1,0 +1,28 @@
+ARG NODE_VERSION=22.9.0
+FROM node:${NODE_VERSION}-slim AS base
+
+ENV NODE_ENV=production
+
+ARG PORT=3000
+
+WORKDIR /src
+
+# Build
+FROM base AS build
+
+COPY --link frontend/package.json ./frontend/package-lock.json ./
+RUN npm install --production=true
+
+COPY --link ./frontend .
+
+RUN npm run build
+RUN npm prune
+
+# Run
+FROM base
+
+ENV PORT=$PORT
+
+COPY --from=build /src/.output /src/.output
+
+CMD [ "node", ".output/server/index.mjs" ]
