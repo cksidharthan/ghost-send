@@ -58,3 +58,15 @@ func (s *Service) GetSecret(c context.Context, request db.GetSecretByIDParams) (
 
 	return &secret, nil
 }
+
+// CheckSecretExists checks if a secret exists in the database
+func (s *Service) CheckSecretExists(c context.Context, request uuid.UUID) (bool, error) {
+	s.Logger.Info("checking if secret exists")
+	secret, err := s.Store.CheckSecretStatus(c, request)
+	if err != nil {
+		s.Logger.Error("error getting secret", zap.Error(err))
+		return false, err
+	}
+
+	return secret, nil
+}

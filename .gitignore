@@ -30,3 +30,5 @@ tmp/
 node_modules/
 
 frontend/dist/
+
+.idea/

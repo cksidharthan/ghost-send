@@ -18,4 +18,5 @@ type SecretHandler struct {
 func New(secretsHandler SecretHandler) {
 	secretsHandler.Routes.GET("/secrets/:id", getSecret(secretsHandler))
 	secretsHandler.Routes.POST("/secrets", postSecret(secretsHandler))
+	secretsHandler.Routes.GET("/secrets/:id/status", getSecretStatus(secretsHandler))
 }
