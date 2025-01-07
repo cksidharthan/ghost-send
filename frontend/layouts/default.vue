@@ -9,8 +9,8 @@
             <NuxtLink to="/" class="group">
               <h1 class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent group-hover:from-indigo-400 group-hover:to-purple-400 transition-all duration-300">
                 <span class="flex items-center gap-2">
-                  <Icon name="heroicons:lock-closed" class="w-6 h-6" />
-                  Share Text
+                  <Icon name="heroicons:lock-closed" class="w-6 h-6 text-indigo-500" />
+                  Share Secret
                 </span>
               </h1>
             </NuxtLink>
@@ -63,7 +63,10 @@
           <!-- Logo and Description -->
           <div class="space-y-4">
             <h3 class="text-xl font-bold bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent">
-              Share Text
+                <span class="flex items-center gap-2">
+                  <Icon name="heroicons:lock-closed" class="w-6 h-6 text-indigo-500" />
+                  Share Secret
+                </span>
             </h3>
             <p class="text-gray-400 text-sm">
               Share secrets securely with end-to-end encryption and automatic expiration.
@@ -105,7 +108,7 @@
         <!-- Copyright -->
         <div class="mt-8 pt-8 border-t border-gray-700">
           <p class="text-center text-sm text-gray-400">
-            © {{ new Date().getFullYear() }} Share Text. All rights reserved.
+            © {{ new Date().getFullYear() }} Share Secret. All rights reserved.
           </p>
         </div>
       </div>

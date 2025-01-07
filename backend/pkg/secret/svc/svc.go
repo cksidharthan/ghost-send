@@ -3,11 +3,14 @@ package svc
 import (
 	"context"
 	"errors"
+	"strings"
 
 	db "github.com/cksidharthan/share-secret/db/sqlc"
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 )
+
+var ErrInvalidPassword = errors.New("invalid password")
 
 type Service struct {
 	Logger *zap.SugaredLogger
@@ -35,6 +38,11 @@ func (s *Service) GetSecret(c context.Context, request db.GetSecretByIDParams) (
 	s.Logger.Info("getting secret")
 	secret, err := s.Store.GetSecretByID(c, request)
 	if err != nil {
+		if strings.Contains(err.Error(), "converting NULL to string is unsupported") {
+			s.Logger.Error("error getting secret", zap.Error(err))
+			return nil, ErrInvalidPassword
+		}
+
 		s.Logger.Error("error getting secret", zap.Error(err))
 		return nil, err
 	}
@@ -69,4 +77,13 @@ func (s *Service) CheckSecretExists(c context.Context, request uuid.UUID) (bool,
 	}
 
 	return secret, nil
+}
+
+type SecretError struct {
+	Code    int
+	Message string
+}
+
+func (e *SecretError) Error() string {
+	return e.Message
 }

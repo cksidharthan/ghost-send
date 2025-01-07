@@ -4,17 +4,6 @@
             <!-- Dark gradient background -->
             <div class="absolute inset-0 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900"></div>
 
-            <!-- Vector patterns -->
-            <div class="absolute inset-0">
-                <!-- Grid pattern -->
-                <div class="absolute inset-0 [background:radial-gradient(#2a3366_1px,transparent_1px)] [background-size:32px_32px] opacity-30">
-                </div>
-
-                <!-- Subtle glow effects -->
-                <div class="absolute top-0 -left-4 w-72 h-72 bg-indigo-500/15 rounded-full blur-3xl"></div>
-                <div class="absolute bottom-0 -right-4 w-72 h-72 bg-purple-500/15 rounded-full blur-3xl"></div>
-            </div>
-
             <!-- Content overlay gradient -->
             <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/80 to-gray-900/40"></div>
 
@@ -28,22 +17,34 @@
                     </div>
 
                     <!-- Error State -->
-                    <div v-else-if="error" class="p-6 text-center">
+                    <div v-else-if="error && !secretExists" class="p-6 text-center">
                         <div class="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-4">
                             <Icon name="heroicons:exclamation-triangle" class="w-6 h-6 text-red-500" />
                         </div>
-                        <h2 class="text-xl font-semibold text-red-500 mb-2">Error</h2>
+                        <h2 class="text-xl font-semibold text-red-500 mb-2">Secret Not Available</h2>
                         <p class="text-gray-300">{{ error }}</p>
+                        <NuxtLink 
+                            to="/" 
+                            class="mt-4 inline-flex items-center text-indigo-400 hover:text-indigo-300 transition-colors duration-200"
+                        >
+                            <Icon name="heroicons:arrow-left" class="w-5 h-5 mr-2" />
+                            Create a new secret
+                        </NuxtLink>
                     </div>
 
-                    <!-- Password Input State -->
-                    <div v-else-if="!secretText" class="space-y-6">
+                    <!-- Password Input State with Error -->
+                    <div v-else-if="!secretText && secretExists" class="space-y-6">
                         <div class="text-center">
                             <div class="w-12 h-12 rounded-full bg-indigo-500/10 flex items-center justify-center mx-auto mb-4">
                                 <Icon name="heroicons:lock-closed" class="w-6 h-6 text-indigo-500" />
                             </div>
                             <h2 class="text-xl font-semibold text-white mb-2">Access Secret</h2>
                             <p class="text-gray-400">Enter the password to view this secret</p>
+                        </div>
+
+                        <!-- Error message for incorrect password -->
+                        <div v-if="error" class="bg-red-500/10 border border-red-500/20 rounded-lg p-3 text-center text-red-400 text-sm">
+                            {{ error }}
                         </div>
 
                         <div class="space-y-4">
@@ -107,25 +108,26 @@ const error = ref<string | null>(null)
 const password = ref('')
 const secretText = ref<string | null>(null)
 const showPassword = ref(false)
+const secretExists = ref(false)
 
 // Check if secret exists
 async function checkSecretStatus() {
     try {
         const response = await fetch(`http://localhost:8080/secrets/${id}/status`)
-        console.log(response)
         
         if (response.status === 404) {
-            error.value = 'Secret not found or has expired'
-        } else if (response.status === 401) {
-            error.value = 'Unauthorized access'
-        } else if (response.status === 500) {
-            error.value = 'Server error occurred'
-        } else if (response.status !== 200) {
+            error.value = 'This secret has been viewed or does not exist'
+            secretExists.value = false
+        } else if (response.status === 200) {
+            secretExists.value = true
+        } else {
             error.value = 'An unexpected error occurred'
+            secretExists.value = false
         }
         
     } catch (e) {
         error.value = 'Failed to check secret status'
+        secretExists.value = false
     } finally {
         loading.value = false
     }
@@ -145,9 +147,11 @@ async function accessSecret() {
             const data = await response.json()
             secretText.value = data.secret_text
         } else if (response.status === 401) {
-            error.value = 'Incorrect password'
+            error.value = 'Incorrect password. Please try again.'
+            password.value = '' // Clear password field on incorrect attempt
         } else if (response.status === 404) {
-            error.value = 'Secret not found or has expired'
+            error.value = 'This secret has been viewed or does not exist'
+            secretExists.value = false
         } else {
             error.value = 'Failed to access secret'
         }

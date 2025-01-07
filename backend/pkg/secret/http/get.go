@@ -1,6 +1,8 @@
 package http
 
 import (
+	"errors"
+	"github.com/cksidharthan/share-secret/pkg/secret/svc"
 	"net/http"
 
 	db "github.com/cksidharthan/share-secret/db/sqlc"
@@ -17,18 +19,29 @@ func getSecret(secretsHandler SecretHandler) gin.HandlerFunc {
 		secretID := c.Param("id")
 		password := c.Query("password")
 
+		parsedUUID, err := uuid.Parse(secretID)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid secret ID"})
+			return
+		}
+
 		// If no password provided, render the password input form
 		if password == "" {
-			c.JSON(http.StatusOK, gin.H{"message": "Please enter a password"})
+			c.JSON(http.StatusBadRequest, gin.H{"message": "Please enter a password"})
 			return
 		}
 
 		result, err := secretsHandler.SecretsSvc.GetSecret(c.Request.Context(), db.GetSecretByIDParams{
-			SecretID: uuid.MustParse(secretID),
+			SecretID: parsedUUID,
 			Password: password,
 		})
 		if err != nil {
-			c.JSON(http.StatusOK, gin.H{"error": err.Error()})
+			if errors.Is(err, svc.ErrInvalidPassword) {
+				c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid password"})
+				return
+			}
+
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 			return
 		}
 
