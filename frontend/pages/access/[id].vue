@@ -85,12 +85,22 @@
                             <p class="text-gray-400">Here's your secret message:</p>
                         </div>
                         
-                        <div class="bg-gray-700/50 backdrop-blur-sm p-4 rounded-lg border border-gray-600">
-                            <p class="text-white break-words">{{ secretText }}</p>
+                        <div class="relative bg-gray-700/50 backdrop-blur-sm p-4 rounded-lg border border-gray-600">
+                            <p class="text-white break-words pr-10">{{ secretText }}</p>
+                            <button 
+                                @click="copyToClipboard"
+                                class="absolute top-2 right-2 p-2 text-gray-400 hover:text-white transition-colors duration-200"
+                                :title="copied ? 'Copied!' : 'Copy to clipboard'"
+                            >
+                                <Icon 
+                                    :name="copied ? 'heroicons:check-circle' : 'heroicons:clipboard'" 
+                                    class="w-5 h-5"
+                                />
+                            </button>
                         </div>
                         
                         <p class="text-sm text-gray-400 text-center">
-                            This secret will be destroyed after viewing. Make sure to save it if needed.
+                            This secret will be destroyed after the specified duration and cannot be retrieved again. Make sure to save it if needed.
                         </p>
                     </div>
                 </div>
@@ -109,11 +119,14 @@ const password = ref('')
 const secretText = ref<string | null>(null)
 const showPassword = ref(false)
 const secretExists = ref(false)
+const copied = ref(false)
+
+const config = useRuntimeConfig()
 
 // Check if secret exists
 async function checkSecretStatus() {
     try {
-        const response = await fetch(`http://localhost:8080/secrets/${id}/status`)
+        const response = await fetch(config.public.SHARE_SECRET_API_URL + `/secrets/${id}/status`)
         
         if (response.status === 404) {
             error.value = 'This secret has been viewed or does not exist'
@@ -141,7 +154,7 @@ async function accessSecret() {
     error.value = null
     
     try {
-        const response = await fetch(`http://localhost:8080/secrets/${id}?password=${encodeURIComponent(password.value)}`)
+        const response = await fetch(config.public.SHARE_SECRET_API_URL + `/secrets/${id}?password=${encodeURIComponent(password.value)}`)
         
         if (response.status === 200) {
             const data = await response.json()
@@ -159,6 +172,29 @@ async function accessSecret() {
         error.value = 'Failed to access secret'
     } finally {
         loading.value = false
+    }
+}
+
+const toast = useToast()
+
+async function copyToClipboard() {
+    if (!secretText.value) return
+    
+    try {
+        await navigator.clipboard.writeText(secretText.value)
+        copied.value = true
+        toast.add({
+            title: 'Success',
+            description: 'Text copied to clipboard',
+        })
+        setTimeout(() => {
+            copied.value = false
+        }, 2000) // Reset after 2 seconds
+    } catch (err) {
+        toast.add({
+            title: 'Error',
+            description: 'Failed to copy text to clipboard',
+        })
     }
 }
 

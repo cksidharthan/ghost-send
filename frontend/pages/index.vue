@@ -160,14 +160,14 @@
                                     <label for="password" class="block text-sm font-medium text-gray-300">
                                         <span class="flex items-center gap-2">
                                             <Icon name="heroicons:key" class="w-5 h-5" />
-                                            Access Password (Optional)
+                                            Access Password
                                         </span>
                                     </label>
                                     <div class="relative">
                                         <input v-model="formData.password" :type="showPassword ? 'text' : 'password'"
                                             id="password"
                                             class="block w-full px-3 py-2 border border-gray-600 rounded-lg text-white bg-gray-700/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 pr-10 transition-all duration-300"
-                                            placeholder="Set a password to protect this secret" />
+                                            placeholder="Set a password to protect this secret" required/>
                                         <button type="button" @click="showPassword = !showPassword"
                                             class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-white transition-colors duration-200">
                                             <Icon :name="showPassword ? 'heroicons:eye-slash' : 'heroicons:eye'"
@@ -231,7 +231,7 @@ const accessUrl = computed(() => {
 const submitSecret = async () => {
     loading.value = true
     try {
-        const response = await fetch('http://localhost:8080/secrets', {
+        const response = await fetch(config.public.SHARE_SECRET_API_URL + '/secrets', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -253,15 +253,15 @@ const copyToClipboard = async (text) => {
     try {
         await navigator.clipboard.writeText(text)
         toast.add({
-            title: 'Copied to clipboard',
-            description: text,
+            title: 'Success',
+            description: 'Link copied to clipboard',
             timeout: 2000
         })
     } catch (error) {
         console.error('Failed to copy text:', error)
         toast.add({
             title: 'Error',
-            description: 'Failed to copy text to clipboard',
+            description: 'Failed to copy link to clipboard',
             timeout: 2000
         })
     }

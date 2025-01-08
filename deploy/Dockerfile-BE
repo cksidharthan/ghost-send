@@ -1,12 +1,12 @@
 # Use a more recent version of Go
-FROM golang:1.23.4-alpine3.20 AS build
+FROM golang:1.23.4-alpine3.21 AS build
 
 WORKDIR /app
-COPY . .
+COPY ./backend .
 RUN GO111MODULE=on CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-w -s -extldflags '-static'" -o /app/secret main.go
 
 # Use scratch as the base image
-FROM alpine:3.20.3
+FROM alpine:3.21.2
 
 ##  install ca-certificates
 RUN apk --no-cache add ca-certificates
@@ -18,12 +18,9 @@ COPY --from=build /app/secret /app/secret
 
 # Copy db/migration folder
 COPY --from=build /app/db/migrations /app/db/migrations
-COPY --from=build /app/views /app/views
 
 ARG PORT
 EXPOSE ${PORT:-8080}
-
-RUN apk add --no-cache curl
 
 ## add user and group
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup

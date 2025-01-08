@@ -78,12 +78,3 @@ func (s *Service) CheckSecretExists(c context.Context, request uuid.UUID) (bool,
 
 	return secret, nil
 }
-
-type SecretError struct {
-	Code    int
-	Message string
-}
-
-func (e *SecretError) Error() string {
-	return e.Message
-}

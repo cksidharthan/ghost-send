@@ -48,34 +48,6 @@ const handleError = () => {
     <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/80 to-gray-900/40"></div>
 
     <!-- Main content -->
-    <div class="relative z-10 min-h-screen flex flex-col items-center justify-center px-4">
-      <div class="bg-gray-800/80 backdrop-blur-sm p-8 rounded-xl shadow-2xl border border-gray-700/50 max-w-lg w-full animate-fade-in">
-        <!-- Error Text -->
-        <div class="relative mb-8 text-center">
-          <h1 class="text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-500 animate-pulse">
-            {{ error?.statusCode || '404' }}
-          </h1>
-          <div class="absolute top-0 left-0 w-full h-full flex justify-center items-center">
-            <span class="text-8xl font-black text-indigo-500/10 animate-bounce delay-75">{{ error?.statusCode || '404' }}</span>
-            <span class="text-8xl font-black text-purple-500/10 animate-bounce delay-150">{{ error?.statusCode || '404' }}</span>
-          </div>
-        </div>
-
-        <h2 class="text-2xl font-bold text-white text-center mb-4">{{ error?.statusMessage || 'Page Not Found' }}</h2>
-        <p class="text-gray-400 text-center mb-8">
-          {{ error?.message || 'The page you're looking for doesn't exist or has been moved.' }}
-        </p>
-
-        <button 
-          @click="handleError"
-          class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-500 transition-all duration-300"
-        >
-          <span class="absolute left-0 inset-y-0 flex items-center pl-3 transition-transform group-hover:-translate-x-1">
-            <Icon name="heroicons:arrow-left" class="w-5 h-5 text-indigo-500 group-hover:text-indigo-400" />
-          </span>
-          <span class="pl-6">Return Home</span>
-        </button>
-      </div>
-    </div>
+    <slot />
   </div>
 </template>

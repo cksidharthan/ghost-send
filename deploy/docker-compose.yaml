@@ -17,10 +17,24 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_DB=secret
 
-  app:
+  frontend:
     build:
       context: ../
-      dockerfile: deploy/Dockerfile
+      dockerfile: ./deploy/Dockerfile-FE
+      args:
+        - SHARE_SECRET_API_URL=$SHARE_SECRET_API_URL
+    ports:
+      - "9090:3000"
+    networks:
+      - secret-network
+    depends_on:
+      - backend
+      - postgres-secret
+
+  backend:
+    build:
+      context: ../
+      dockerfile: deploy/Dockerfile-BE
       args:
         - PORT=7780
     ports:

@@ -1,0 +1,34 @@
+ARG NODE_VERSION=22.9.0
+FROM node:${NODE_VERSION}-slim AS base
+
+ARG PORT=3000
+
+ENV NODE_ENV=production
+
+ARG SHARE_SECRET_API_URL
+ENV SHARE_SECRET_API_URL ${SHARE_SECRET_API_URL}
+
+WORKDIR /src
+
+# Build
+FROM base AS build
+
+COPY --link frontend/package.json ./frontend/package-lock.json ./
+RUN npm install --production=true
+
+COPY --link ./frontend .
+
+ARG SHARE_SECRET_API_URL
+ENV SHARE_SECRET_API_URL ${SHARE_SECRET_API_URL}
+
+RUN npm run build
+RUN npm prune
+
+# Run
+FROM base
+
+ENV PORT=$PORT
+
+COPY --from=build /src/.output /src/.output
+
+CMD [ "node", ".output/server/index.mjs" ]

@@ -16,7 +16,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     yourOrigin: "localhost",
     public: {
-      hurdleBackendURL: process.env.HURDLE_API_URL,
+      SHARE_SECRET_API_URL: process.env.SHARE_SECRET_API_URL,
     },
   },
 })
