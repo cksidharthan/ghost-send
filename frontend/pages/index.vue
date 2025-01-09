@@ -231,7 +231,7 @@ const accessUrl = computed(() => {
 const submitSecret = async () => {
     loading.value = true
     try {
-        const response = await fetch(config.public.SHARE_SECRET_API_URL + '/secrets', {
+        const response = await fetch(config.public.shareSecretApiUrl + '/secrets', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

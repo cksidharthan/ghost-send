@@ -14,9 +14,8 @@ export default defineNuxtConfig({
     fallback: 'light'
   },
   runtimeConfig: {
-    yourOrigin: "localhost",
     public: {
-      SHARE_SECRET_API_URL: process.env.SHARE_SECRET_API_URL,
+      shareSecretApiUrl: "",
     },
   },
 })

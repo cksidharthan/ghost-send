@@ -126,7 +126,7 @@ const config = useRuntimeConfig()
 // Check if secret exists
 async function checkSecretStatus() {
     try {
-        const response = await fetch(config.public.SHARE_SECRET_API_URL + `/secrets/${id}/status`)
+        const response = await fetch(config.public.shareSecretApiUrl + `/secrets/${id}/status`)
         
         if (response.status === 404) {
             error.value = 'This secret has been viewed or does not exist'
@@ -154,7 +154,7 @@ async function accessSecret() {
     error.value = null
     
     try {
-        const response = await fetch(config.public.SHARE_SECRET_API_URL + `/secrets/${id}?password=${encodeURIComponent(password.value)}`)
+        const response = await fetch(config.public.shareSecretApiUrl + `/secrets/${id}?password=${encodeURIComponent(password.value)}`)
         
         if (response.status === 200) {
             const data = await response.json()
