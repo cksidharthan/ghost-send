@@ -21,10 +21,13 @@ services:
     build:
       context: ../
       dockerfile: ./deploy/Dockerfile-FE
-      args:
-        - SHARE_SECRET_API_URL=$SHARE_SECRET_API_URL
     ports:
       - "9090:3000"
+    # Uncomment this when we have a way to pass the env variables via .env file
+    # env_file:
+    #   - ../.env
+    environment:
+      - NUXT_PUBLIC_SHARE_SECRET_API_URL=${SHARE_SECRET_API_URL}
     networks:
       - secret-network
     depends_on:

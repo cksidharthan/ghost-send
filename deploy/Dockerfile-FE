@@ -18,9 +18,6 @@ RUN npm install --production=true
 
 COPY --link ./frontend .
 
-ARG SHARE_SECRET_API_URL
-ENV SHARE_SECRET_API_URL ${SHARE_SECRET_API_URL}
-
 RUN npm run build
 RUN npm prune
 
