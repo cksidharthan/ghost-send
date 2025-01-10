@@ -250,7 +250,7 @@ const accessUrl = computed(() => {
     if (!result.value) return ''
     // if result.value is not a valid uuid, return an empty string
     if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(result.value)) {
-        return ''
+        return result.value
     }
     const baseUrl = window.location.origin
     return `${baseUrl}/access/${result.value}`
