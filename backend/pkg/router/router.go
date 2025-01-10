@@ -42,13 +42,7 @@ func New(lc fx.Lifecycle, envCfg *config.Config, zapLog *zap.SugaredLogger) Rout
 	engine.RedirectTrailingSlash = false
 
 	// Configure CORS
-	engine.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"*"},
-		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
-		ExposeHeaders:    []string{"Content-Length"},
-		AllowCredentials: true,
-	}))
+	engine.Use(cors.Default())
 
 	server := &http.Server{
 		ReadTimeout:  30 * time.Second,
