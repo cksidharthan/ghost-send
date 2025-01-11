@@ -7,11 +7,16 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@nuxtjs/color-mode',
     '@nuxt/icon',
-    '@nuxt/image'
+    '@nuxt/image',
+    '@nuxtjs/sitemap',
+    '@nuxtjs/robots',
   ],
   colorMode: {
     preference: 'system',
     fallback: 'light'
+  },
+  robots: {
+    blockAiBots: true
   },
   runtimeConfig: {
     public: {

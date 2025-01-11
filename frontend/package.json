@@ -1,21 +1,23 @@
 {
-  "name": "nuxt-app",
+  "name": "ghost-send",
   "private": true,
   "type": "module",
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev --host 0.0.0.0",
+    "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "nuxt": "^3.15.1",
-    "vue": "latest",
-    "vue-router": "latest",
     "@nuxt/icon": "^1.5.0",
     "@nuxt/image": "^1.8.1",
     "@nuxt/ui": "^2.18.4",
-    "@nuxtjs/color-mode": "^3.4.4"
+    "@nuxtjs/color-mode": "^3.4.4",
+    "@nuxtjs/robots": "^5.1.0",
+    "@nuxtjs/sitemap": "^7.0.1",
+    "nuxt": "^3.15.1",
+    "vue": "latest",
+    "vue-router": "latest"
   }
 }
