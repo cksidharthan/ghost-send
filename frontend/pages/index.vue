@@ -46,47 +46,40 @@
             <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/80 to-gray-900/40"></div>
 
             <!-- Content Container -->
-            <div class="mx-auto max-w-7xl px-6 py-8 sm:py-12 lg:py-16 relative z-10">
-                <div class="flex flex-col lg:flex-row lg:items-center lg:gap-x-16">
-                    <!-- Left Side - Hero Content -->
-                    <div class="max-w-2xl lg:max-w-xl lg:pt-8 mb-8 lg:mb-0 animate-fade-in">
-                        <h1 class="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
+            <div class="mx-auto max-w-4xl px-6 py-6 sm:py-8 relative z-10">
+                <div class="flex flex-col items-center gap-6">
+                    <!-- Top - Hero Content -->
+                    <div class="text-center w-full animate-fade-in">
+                        <h1 class="text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
                             Share secrets
-                            <span class="block mt-2 bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent">
+                            <span class="inline bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent">
                                 securely with confidence
                             </span>
                         </h1>
-                        <p class="mt-4 text-lg leading-8 text-gray-300 animate-fade-in-delay">
-                            Share passwords, API keys, and sensitive information securely and temporarily. 
-                            Our platform ensures your secrets are protected and automatically destroyed 
-                            after access or expiration - no traces left behind.
+                        <p class="mt-3 text-base leading-7 text-gray-300 animate-fade-in-delay max-w-2xl mx-auto">
+                            Share passwords, API keys, and sensitive information securely and temporarily.
+                            Automatically destroyed after access or expiration — no traces left behind.
                         </p>
 
-                        <!-- Feature List -->
-                        <div class="mt-8 space-y-4">
-                            <div class="flex items-center gap-x-3 animate-fade-in-up delay-200">
-                                <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg bg-indigo-500/10">
-                                    <Icon name="heroicons:clock" class="w-5 h-5 text-indigo-500" />
-                                </div>
-                                <p class="text-base text-gray-300">Automatic expiration after specified time</p>
+                        <!-- Feature List - horizontal -->
+                        <div class="mt-4 flex flex-wrap justify-center gap-x-8 gap-y-2">
+                            <div class="flex items-center gap-x-2 animate-fade-in-up delay-200">
+                                <Icon name="heroicons:clock" class="w-4 h-4 text-indigo-500 flex-shrink-0" />
+                                <p class="text-sm text-gray-300">Auto-expiration</p>
                             </div>
-                            <div class="flex items-center gap-x-3 animate-fade-in-up delay-300">
-                                <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg bg-indigo-500/10">
-                                    <Icon name="heroicons:eye" class="w-5 h-5 text-indigo-500" />
-                                </div>
-                                <p class="text-base text-gray-300">Limited views for enhanced privacy</p>
+                            <div class="flex items-center gap-x-2 animate-fade-in-up delay-300">
+                                <Icon name="heroicons:eye" class="w-4 h-4 text-indigo-500 flex-shrink-0" />
+                                <p class="text-sm text-gray-300">Limited views</p>
                             </div>
-                            <div class="flex items-center gap-x-3 animate-fade-in-up delay-500">
-                                <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg bg-indigo-500/10">
-                                    <Icon name="heroicons:trash" class="w-5 h-5 text-indigo-500" />
-                                </div>
-                                <p class="text-base text-gray-300">Automatic destruction after access or expiration</p>
+                            <div class="flex items-center gap-x-2 animate-fade-in-up delay-500">
+                                <Icon name="heroicons:trash" class="w-4 h-4 text-indigo-500 flex-shrink-0" />
+                                <p class="text-sm text-gray-300">Auto-destruction after access</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Right Side - Form -->
-                    <div class="lg:flex-1 lg:min-w-[500px]">
+                    <!-- Bottom - Form -->
+                    <div class="w-full">
                         <div class="bg-gray-800/80 backdrop-blur-sm p-6 rounded-xl shadow-2xl transition-all duration-300 hover:shadow-indigo-500/10 border border-gray-700/50 animate-fade-in-up delay-200">
                             <div>
                                 <h2 class="text-center text-2xl font-extrabold text-white">
@@ -98,7 +91,7 @@
                                 <p class="mt-2 text-center text-sm text-gray-400">Secure and temporary</p>
                             </div>
 
-                            <form @submit.prevent="submitSecret" class="mt-6 space-y-4">
+                            <form @submit.prevent="submitSecret" class="mt-4 space-y-3">
                                 <!-- Secret Input -->
                                 <div class="space-y-2">
                                     <label for="secret" class="block text-sm font-medium text-gray-300">
@@ -110,7 +103,7 @@
                                     <textarea v-model="formData.secret_text" id="secret" required
                                         class="appearance-none relative block w-full px-3 py-2 border border-gray-600 placeholder-gray-500 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 text-sm bg-gray-700/50 backdrop-blur-sm transition-all duration-300"
                                         placeholder="Enter the secret text or password you want to share"
-                                        rows="10"></textarea>
+                                        rows="5"></textarea>
                                 </div>
 
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">

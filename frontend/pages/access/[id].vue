@@ -8,7 +8,7 @@
             <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/80 to-gray-900/40"></div>
 
             <!-- Content Container -->
-            <div class="relative z-10 mx-auto max-w-lg px-6 py-12 sm:py-16 lg:py-20">
+            <div class="relative z-10 mx-auto max-w-4xl px-6 py-12 sm:py-16 lg:py-20">
                 <div class="bg-gray-800/80 backdrop-blur-sm p-6 sm:p-8 rounded-xl shadow-2xl border border-gray-700/50">
                     <!-- Loading State -->
                     <div v-if="loading" class="text-center py-8">
@@ -86,7 +86,7 @@
                         </div>
                         
                         <div class="relative bg-gray-700/50 backdrop-blur-sm p-4 rounded-lg border border-gray-600">
-                            <p class="text-white break-words pr-10">{{ secretText }}</p>
+                            <p class="text-white break-words pr-10 whitespace-pre-wrap">{{ secretText }}</p>
                             <button 
                                 @click="copyToClipboard"
                                 class="absolute top-2 right-2 p-2 text-gray-400 hover:text-white transition-colors duration-200"

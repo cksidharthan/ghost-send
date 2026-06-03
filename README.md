@@ -1,201 +1,127 @@
-# GhostSend - Secure Secret Sharing Platform
+# GhostSend
 
-A secure platform for sharing sensitive information with database encryption, automatic expiration, and view limits. Built with Nuxt.js 3 for the frontend and Go for the backend.
+A secure secret sharing platform. Secrets are encrypted at rest, expire automatically, and can be limited to a set number of views.
 
-## 🌟 Features
+## Features
 
-- **Database Encryption**: All secrets are encrypted before storage
-- **Auto-Expiration**: Set expiration times (5 minutes to 7 days)
-- **View Limits**: Control how many times your secret can be viewed
-- **Password Protection**: Additional security layer with password protection
-- **Modern UI**: Responsive design with dark mode and animations
-- **Secure Backend**: Built with Go and PostgreSQL for robust data handling
+- Encrypted secret storage in PostgreSQL
+- Configurable expiration (5 minutes to 7 days)
+- View count limits
+- Optional password protection
 
-## 🏗️ Architecture
+## Stack
 
-### Frontend (Nuxt.js 3)
-- Modern, responsive UI built with Nuxt.js 3
-- TailwindCSS for styling
-- Dark mode support
-- Animated components
-- Form validation
-- Clipboard integration
-- Error handling and notifications
+- Backend: Go 1.23, Gin, PostgreSQL, sqlc, golang-migrate, Uber FX, Zap
+- Frontend: Nuxt 3, TailwindCSS (embedded in the Go binary at build time)
 
-### Backend (Go)
-- RESTful API built with Gin framework
-- PostgreSQL database with migrations
-- Secure password hashing
-- Automatic cleanup of expired secrets
-- Health check endpoints
-- Structured logging with Zap
-- Dependency injection with Uber FX
-
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
-- Node.js (v22.9.0 or later)
-- Go (v1.23.4 or later)
-- Docker and Docker Compose
-- PostgreSQL (v17.0 or later)
+
+- Go 1.23+
+- Node.js 22+
+- PostgreSQL 17+
+- [Task](https://taskfile.dev) (optional, for task runner)
+
+### Environment Variables
+
+Copy `.env` and fill in your values:
+
+```
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5433
+POSTGRES_USER=username
+POSTGRES_PASSWORD=password
+POSTGRES_DB=ghostsend
+POSTGRES_SSL_MODE=disable
+PORT=8080
+LOG_LEVEL=info
+```
 
 ### Local Development
 
-1. Clone the repository:
+Start a PostgreSQL instance:
+
 ```bash
-git clone https://github.com/cksidharthan/ghost-send.git
-cd ghost-send
+docker compose up -d postgres
 ```
 
-2. Set up environment variables:
-```env
-# Frontend (.env)
-GHOST_SEND_API_URL=http://localhost:7780
+Run the app (builds the frontend first):
 
-# Backend (.env)
-POSTGRES_HOST=localhost
-POSTGRES_PORT=5433
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=postgres
-POSTGRES_DB=secret
-POSTGRES_SSL_MODE=disable
-PORT=7780
-```
-
-3. Start the development environment:
 ```bash
-# Using Docker Compose
-docker-compose -f deploy/docker-compose.yaml up -d
-
-# Or start services individually:
-
-# Frontend
-cd frontend
-npm install
-npm run dev
-
-# Backend
-cd backend
-go mod download
+task up
+# or without Task:
+cd frontend && npm install && npm run generate && cd ..
 go run main.go
 ```
 
-The application will be available at:
-- Frontend: http://localhost:9090
-- Backend: http://localhost:7780
-- PostgreSQL: localhost:5433
+The application is available at http://localhost:8080.
 
-## 🔧 Configuration
-
-### Frontend Configuration
-- `nuxt.config.ts`: Nuxt.js configuration with the following modules:
-  - `@nuxt/ui`
-  - `@nuxtjs/tailwindcss`
-  - `@nuxtjs/color-mode`
-  - `@nuxt/icon`
-  - `@nuxt/image`
-- Environment variables:
-  - `GHOST_SEND_API_URL`: Backend API URL
-
-### Backend Configuration
-- Database migrations in `backend/db/migrations`
-- Environment variables:
-  - `POSTGRES_*`: Database configuration
-  - `PORT`: API port
-  - `LOG_LEVEL`: Logging level
-  - `MIGRATION_PATH`: Path to database migrations
-
-## 📦 Deployment
-
-The project includes Docker configurations for easy deployment:
+### Build
 
 ```bash
-docker-compose -f deploy/docker-compose.yaml up -d
+task build
+# or without Task:
+cd frontend && npm run generate && cd ..
+CGO_ENABLED=0 go build -ldflags "-w -s" -o ghost-send main.go
 ```
 
-This will start:
-1. PostgreSQL database (port 5433)
-2. Backend API service (port 7780)
-3. Frontend application (port 9090)
-
-### Production Build
+### Docker Compose (full stack)
 
 ```bash
-# Frontend
-cd frontend
-npm run build
-
-# Backend
-cd backend
-go build -o secret main.go
+docker compose up -d
 ```
 
-## 🔒 Security Features
+This starts PostgreSQL (port 5433), the backend (port 8080), and the frontend (port 6666).
 
-1. **Database Security**
-   - Encrypted secret storage in PostgreSQL database
-   - Automatic cleanup of expired secrets
-   - Password hashing with bcrypt
-   - Secure salt generation
+## API
 
-2. **API Security**
-   - CORS protection
-   - Input validation
-   - Error handling
-   - Secure password verification
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | /healthz | Health check |
+| POST | /api/v1/secrets | Create a secret |
+| POST | /api/v1/secrets/:id | Retrieve a secret |
+| GET | /api/v1/secrets/:id/status | Check secret status |
 
-3. **Frontend Security**
-   - XSS protection
-   - Secure password handling
-   - Client-side validation
-   - Secure clipboard operations
+### POST /api/v1/secrets
 
-## 📝 API Endpoints
+```json
+{
+  "secret_text": "my secret",
+  "password": "required",
+  "expiration": "1h",
+  "views": 1
+}
+```
 
-- `GET /healthz`: Health check endpoint
-- `POST /secrets`: Create a new secret
-  - Parameters:
-    - `secret_text`: The text to encrypt
-    - `password`: Access password
-    - `expires_at`: Expiration time
-    - `views`: Number of allowed views
-- `GET /secrets/:id`: Retrieve a secret
-  - Parameters:
-    - `id`: Secret UUID
-    - `password`: Access password
-- `GET /secrets/:id/status`: Check secret status
-  - Parameters:
-    - `id`: Secret UUID
+Valid `expiration` values: `5m`, `1h`, `1d`, `7d`. Defaults to `1h` if omitted.
 
-## 🛠️ Development
+### POST /api/v1/secrets/:id
 
-### Frontend Pages
-- `/`: Home page with secret creation form
-- `/access/:id`: Secret access page
-- `/about`: About page with feature information
+Password is always required and must be sent in the request body.
 
-### Backend Structure
-- `cmd/`: Application entry point
-- `pkg/`: Main application packages
-- `db/`: Database migrations and queries
-- `deploy/`: Deployment configurations
+```json
+{
+  "password": "required"
+}
+```
 
-## 📚 Contributing
+## Project Structure
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+```
+cmd/          application entry point
+db/           migrations and sqlc-generated code
+frontend/     Nuxt 3 frontend (built output embedded in binary)
+pkg/
+  config/     environment config
+  daemon/     background cleanup (expired secret janitor)
+  logger/     zap logger setup
+  postgres/   database connection
+  router/     HTTP router and handlers
+  secret/     secret domain (HTTP handlers + service layer)
+  ui/         static file serving for embedded frontend
+```
 
-## 📄 License
+## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🙏 Acknowledgments
-
-- [Nuxt.js](https://nuxt.com/)
-- [Go](https://golang.org/)
-- [PostgreSQL](https://www.postgresql.org/)
-- [TailwindCSS](https://tailwindcss.com/)
-- [Gin](https://gin-gonic.com/)
+MIT
