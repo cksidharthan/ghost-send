@@ -10,13 +10,11 @@ type SecretHandler struct {
 	fx.In
 
 	SecretsSvc svc.Service
-
-	// the name of the struct field in the Router struct in router.go
-	Routes *gin.RouterGroup `name:"baseRoutes"`
+	Routes     *gin.RouterGroup `name:"apiV1Routes"`
 }
 
 func New(secretsHandler SecretHandler) {
-	secretsHandler.Routes.GET("/secrets/:id", getSecret(secretsHandler))
+	secretsHandler.Routes.POST("/secrets/:id", getSecret(secretsHandler))
 	secretsHandler.Routes.POST("/secrets", postSecret(secretsHandler))
 	secretsHandler.Routes.GET("/secrets/:id/status", getSecretStatus(secretsHandler))
 }

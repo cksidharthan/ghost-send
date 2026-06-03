@@ -2,15 +2,18 @@ package svc
 
 import (
 	"context"
+	"database/sql"
 	"errors"
-	"strings"
 
 	db "github.com/cksidharthan/ghost-send/db/sqlc"
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 )
 
-var ErrInvalidPassword = errors.New("invalid password")
+var (
+	ErrInvalidPassword = errors.New("invalid password")
+	ErrSecretNotFound  = errors.New("secret not found or expired")
+)
 
 type Service struct {
 	Logger *zap.SugaredLogger
@@ -34,37 +37,23 @@ func (s *Service) CreateSecret(c context.Context, request db.CreateSecretParams)
 	return &secret.ID, nil
 }
 
-func (s *Service) GetSecret(c context.Context, request db.GetSecretByIDParams) (*db.GetSecretByIDRow, error) {
+func (s *Service) GetSecret(c context.Context, request db.GetSecretByIDLockedParams) (*db.GetSecretByIDLockedRow, error) {
 	s.Logger.Info("getting secret")
-	secret, err := s.Store.GetSecretByID(c, request)
+	secret, err := s.Store.AccessSecretAtomic(c, request)
 	if err != nil {
-		if strings.Contains(err.Error(), "converting NULL to string is unsupported") {
-			s.Logger.Error("error getting secret", zap.Error(err))
-			return nil, ErrInvalidPassword
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, ErrSecretNotFound
 		}
-
 		s.Logger.Error("error getting secret", zap.Error(err))
 		return nil, err
 	}
 
 	if !secret.PasswordMatches {
 		s.Logger.Error("password does not match")
-		return nil, errors.New("password does not match")
+		return nil, ErrInvalidPassword
 	}
 
-	_, decrementErr := s.Store.DecrementTries(c, request.SecretID)
-	if decrementErr != nil {
-		s.Logger.Error("error decrementing tries", zap.Error(decrementErr))
-	}
-
-	if secret.RemainingTries <= 1 {
-		deleteErr := s.Store.DeleteSecret(c, request.SecretID)
-		if deleteErr != nil {
-			s.Logger.Error("error deleting secret", zap.Error(deleteErr))
-		}
-	}
-
-	return &secret, nil
+	return secret, nil
 }
 
 // CheckSecretExists checks if a secret exists in the database

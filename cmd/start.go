@@ -8,6 +8,7 @@ import (
 	"github.com/cksidharthan/ghost-send/pkg/router"
 	secretHttp "github.com/cksidharthan/ghost-send/pkg/secret/http"
 	secretSvc "github.com/cksidharthan/ghost-send/pkg/secret/svc"
+	"github.com/cksidharthan/ghost-send/pkg/ui"
 	"go.uber.org/fx"
 )
 
@@ -24,6 +25,7 @@ func Start() {
 			router.Healthz,
 			daemon.RunJanitor,
 			secretHttp.New,
+			ui.Register,
 		),
 	)
 

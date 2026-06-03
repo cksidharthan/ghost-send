@@ -1,10 +1,9 @@
 services:
-  postgres-ghost:
+  postgres:
     image: postgres:17.0-alpine3.20
     networks:
       - ghost-network
     restart: unless-stopped
-    hostname: postgres-ghost
     ports:
       - 5433:5432
     healthcheck:
@@ -13,7 +12,7 @@ services:
       timeout: 5s
       retries: 5
     env_file:
-      - ../.env
+      - .env
 
   frontend:
     image: cksidharthan/ghostsend-frontend:latest
@@ -21,12 +20,12 @@ services:
     ports:
       - "6666:3000"
     env_file:
-      - ../.env
+      - .env
     networks:
       - ghost-network
     depends_on:
       - backend
-      - postgres-ghost
+      - postgres
 
   backend:
     image: cksidharthan/ghostsend-backend:latest
@@ -36,7 +35,7 @@ services:
     networks:
       - ghost-network
     env_file:
-      - ../.env
+      - .env
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/healthz"]
       interval: 10s
@@ -44,7 +43,7 @@ services:
       retries: 5
     restart: unless-stopped
     depends_on:
-      postgres-ghost:
+      postgres:
         condition: service_healthy
 
 networks:

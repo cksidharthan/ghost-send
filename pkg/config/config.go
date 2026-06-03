@@ -25,7 +25,8 @@ type Config struct {
 // New returns a new Config struct with values from environment variables and .env file
 func New() (*Config, error) {
 	err := godotenv.Load(".env")
-	if err != nil && errors.Is(err, &fs.PathError{}) {
+	var pathErr *fs.PathError
+	if err != nil && !errors.As(err, &pathErr) {
 		return nil, fmt.Errorf("failed to load .env file: %w", err)
 	}
 

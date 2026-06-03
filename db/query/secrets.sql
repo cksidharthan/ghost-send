@@ -91,6 +91,31 @@ SELECT
     COUNT(*) FILTER (WHERE remaining_tries = 0) as failed_attempts
 FROM secrets;
 
+-- name: GetSecretByIDLocked :one
+-- Same as GetSecretByID but uses SELECT FOR UPDATE to serialize concurrent access.
+-- Returns empty string (not NULL) for secret_text on password mismatch so sqlc
+-- can generate a plain string field; callers must check password_matches first.
+SELECT
+    s.id,
+    CASE
+        WHEN (s.password_hash = crypt(sqlc.arg(password), s.password_hash))
+        THEN pgp_sym_decrypt(s.secret_text::bytea, sqlc.arg(password))::text
+        ELSE ''
+    END as secret_text,
+    s.password_hash,
+    s.salt,
+    s.expires_at,
+    s.created_at,
+    s.remaining_tries,
+    s.last_viewed_at,
+    (s.password_hash = crypt(sqlc.arg(password), s.password_hash)) as password_matches,
+    CASE WHEN s.remaining_tries <= 1 THEN TRUE ELSE FALSE END as should_delete
+FROM secrets s
+WHERE s.id = sqlc.arg(secret_id)::uuid
+AND s.expires_at > CURRENT_TIMESTAMP
+AND s.remaining_tries > 0
+FOR UPDATE;
+
 -- name: CheckSecretStatus :one
 -- Checks if a secret exists and is still accessible
 -- Args: $1: secret UUID

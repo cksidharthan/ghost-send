@@ -22,6 +22,7 @@ type Router struct {
 
 	Engine    *gin.Engine
 	BaseRoute *gin.RouterGroup `name:"baseRoutes"`
+	APIRoute  *gin.RouterGroup `name:"apiV1Routes"`
 	Server    *http.Server
 }
 
@@ -37,8 +38,6 @@ func New(lc fx.Lifecycle, envCfg *config.Config, zapLog *zap.SugaredLogger) Rout
 	})
 
 	engine := gin.Default()
-	engine.Use(gin.Recovery())
-	engine.Use(gin.Logger())
 	engine.RedirectTrailingSlash = false
 
 	// Configure CORS
@@ -78,6 +77,7 @@ func New(lc fx.Lifecycle, envCfg *config.Config, zapLog *zap.SugaredLogger) Rout
 	return Router{
 		Engine:    engine,
 		BaseRoute: engine.Group("/"),
+		APIRoute:  engine.Group("/api/v1"),
 		Server:    server,
 	}
 }

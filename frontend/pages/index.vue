@@ -233,7 +233,6 @@
 </template>
 
 <script setup>
-const isMobileMenuOpen = ref(false)
 const showPassword = ref(false)
 const loading = ref(false)
 const result = ref('')

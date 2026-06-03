@@ -3,6 +3,7 @@ package postgres
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 
 	db "github.com/cksidharthan/ghost-send/db/sqlc"
@@ -47,7 +48,7 @@ func New(lc fx.Lifecycle, envCfg *config.Config, zapLogger *zap.SugaredLogger) (
 
 	err = m.Up()
 	if err != nil {
-		if err.Error() == "no change" {
+		if errors.Is(err, migrate.ErrNoChange) {
 			zapLogger.Info("no migrations to run")
 		} else {
 			zapLogger.Error("unable to run migrations", zap.Error(err))

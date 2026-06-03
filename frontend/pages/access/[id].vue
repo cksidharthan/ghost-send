@@ -120,6 +120,7 @@ const secretText = ref<string | null>(null)
 const showPassword = ref(false)
 const secretExists = ref(false)
 const copied = ref(false)
+let copiedTimer: ReturnType<typeof setTimeout> | null = null
 
 const config = useRuntimeConfig()
 
@@ -154,7 +155,11 @@ async function accessSecret() {
     error.value = null
     
     try {
-        const response = await fetch(config.public.ghostSendApiUrl + `/secrets/${id}?password=${encodeURIComponent(password.value)}`)
+        const response = await fetch(config.public.ghostSendApiUrl + `/secrets/${id}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password: password.value }),
+        })
         
         if (response.status === 200) {
             const data = await response.json()
@@ -187,9 +192,10 @@ async function copyToClipboard() {
             title: 'Success',
             description: 'Text copied to clipboard',
         })
-        setTimeout(() => {
+        if (copiedTimer) clearTimeout(copiedTimer)
+        copiedTimer = setTimeout(() => {
             copied.value = false
-        }, 2000) // Reset after 2 seconds
+        }, 2000)
     } catch (err) {
         toast.add({
             title: 'Error',

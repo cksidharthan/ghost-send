@@ -29,6 +29,11 @@ func postSecret(secretsHandler SecretHandler) gin.HandlerFunc {
 			return
 		}
 
+		if request.Password == "" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Password is required"})
+			return
+		}
+
 		// Convert views to integer
 		if request.Views < 1 {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid views value - must be a positive number"})
@@ -45,7 +50,7 @@ func postSecret(secretsHandler SecretHandler) gin.HandlerFunc {
 			RemainingTries: int32(request.Views),
 		})
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 			return
 		}
 
