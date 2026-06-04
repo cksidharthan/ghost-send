@@ -14,19 +14,6 @@ services:
     env_file:
       - .env
 
-  frontend:
-    image: cksidharthan/ghostsend-frontend:latest
-    platform: linux/amd64
-    ports:
-      - "6666:3000"
-    env_file:
-      - .env
-    networks:
-      - ghost-network
-    depends_on:
-      - backend
-      - postgres
-
   backend:
     image: cksidharthan/ghostsend-backend:latest
     platform: linux/amd64

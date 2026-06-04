@@ -38,6 +38,8 @@ func RunJanitor(lc fx.Lifecycle, dbStore *db.Store, logger *zap.SugaredLogger) {
 
 // startCleanup - starts the secret janitor.
 func (j *Janitor) startCleanup() {
+	j.deleteExpiredSecrets()
+
 	ticker := time.NewTicker(1 * time.Minute)
 	defer ticker.Stop()
 
@@ -47,13 +49,17 @@ func (j *Janitor) startCleanup() {
 			j.logger.Info("received shutdown signal, stopping secret janitor")
 			return
 		case <-ticker.C:
-			j.logger.Info("cleaning expired secrets")
-			err := j.dbStore.DeleteExpiredSecrets(context.Background())
-			if err != nil {
-				j.logger.Error("unable to delete expired secrets", zap.Error(err))
-				continue
-			}
-			j.logger.Info("successfully cleaned expired secrets")
+			j.deleteExpiredSecrets()
 		}
 	}
+}
+
+func (j *Janitor) deleteExpiredSecrets() {
+	j.logger.Info("cleaning expired secrets")
+	err := j.dbStore.DeleteExpiredSecrets(context.Background())
+	if err != nil {
+		j.logger.Error("unable to delete expired secrets", zap.Error(err))
+		return
+	}
+	j.logger.Info("successfully cleaned expired secrets")
 }

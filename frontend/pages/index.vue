@@ -115,7 +115,7 @@
                                                 Expires After
                                             </span>
                                         </label>
-                                        <select v-model="formData.expires_at" id="expiration" required
+                                        <select v-model="formData.expiration" id="expiration" required
                                             class="appearance-none block w-full px-3 py-2 pr-10 text-sm border border-gray-600 rounded-lg text-white bg-gray-700/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300">
                                             <option value="5m">5 minutes</option>
                                             <option value="1h">1 hour</option>
@@ -233,7 +233,7 @@ const result = ref('')
 const formData = ref({
     secret_text: '',
     password: '',
-    expires_at: '5m',
+    expiration: '5m',
     views: 1
 })
 
